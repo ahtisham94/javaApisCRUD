@@ -36,6 +36,7 @@ public class APIManager<T> {
         GetDataService service = getService();
         Call<GeneralResponseModel> result = service.generateOTP("application/json", requestModel);
         sendRequestSync(result, callback, rc);
+//        sendResultGeneric(result, callback, rc);
     }
 
 
@@ -53,6 +54,7 @@ public class APIManager<T> {
                 genericResponseModel.setSuccess(false);
                 genericResponseModel.setCode(response.code());
                 genericResponseModel.setMessage(response.message());
+                result.onResult(genericResponseModel, rc);
             }
 
         } catch (IOException e) {
@@ -61,6 +63,7 @@ public class APIManager<T> {
             genericResponseModel.setSuccess(false);
             genericResponseModel.setCode(12470);
             genericResponseModel.setMessage(e.getLocalizedMessage());
+            result.onResult(genericResponseModel, rc);
         }
     }
 

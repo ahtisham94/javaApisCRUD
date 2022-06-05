@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.fileUtils.FilesStorageService;
 import com.example.demo.models.User.Gender;
 import com.example.demo.models.User.UserAddress;
 import com.example.demo.models.User.UserInfo;
@@ -13,11 +14,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import retrofit2.Retrofit;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @SpringBootApplication
-public class DemoApplication {
-
+public class DemoApplication implements CommandLineRunner {
+    @Resource
+    FilesStorageService storageService;
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
         System.out.println("first Project");
@@ -54,4 +57,9 @@ public class DemoApplication {
             repository.save(userInfo);
     }
 
+    @Override
+    public void run(String... args) throws Exception {
+        storageService.deleteAll();
+        storageService.init();
+    }
 }
