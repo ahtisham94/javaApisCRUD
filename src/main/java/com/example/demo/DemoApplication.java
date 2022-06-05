@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import retrofit2.Retrofit;
 
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class DemoApplication {
 //            usingMongoTemplate(repository, mongoTemplate, userInfo);
 
         };
+
     }
 
     private void usingMongoTemplate(UserRepository repository, MongoTemplate mongoTemplate, UserInfo userInfo) throws Exception {
