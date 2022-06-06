@@ -2,6 +2,7 @@ package com.example.demo.models;
 
 
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,19 +13,10 @@ import java.math.BigInteger;
 @Document
 public class OTPModel {
     @Id
-    private int id;
+    private long id;
     private String number;
     @Indexed(unique = true)
     private int otp;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getNumber() {
         return number;
     }
@@ -39,5 +31,9 @@ public class OTPModel {
 
     public void setOtp(int otp) {
         this.otp = otp;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

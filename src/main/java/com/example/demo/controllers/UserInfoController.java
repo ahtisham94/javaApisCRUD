@@ -9,26 +9,26 @@ import com.example.demo.models.User.GenerateOTPRequestModel;
 import com.example.demo.models.User.UserInfo;
 import com.example.demo.services.StudentService;
 import lombok.AllArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-import retrofit2.Call;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 @RestController
 @AllArgsConstructor
@@ -69,6 +69,7 @@ public class UserInfoController<T> {
                     responseModel.setData(null);
 
                 }, () -> {
+                    userInfo.setId(studentService.getRepository().count() + 1);
                     studentService.saveUser(userInfo);
                     responseModel.setCode(00);
                     responseModel.setMessage("User information Successfully");
@@ -148,6 +149,7 @@ public class UserInfoController<T> {
                         template.updateFirst(query, update, OTPModel.class);
                     }, () -> {
                         OTPModel otpModel = new OTPModel();
+                        otpModel.setId(studentService.getOtpRepository().count() + 1);
                         otpModel.setOtp((int) ((((Double) response.getData())).doubleValue()));
                         otpModel.setNumber(requestModel.getMsisdn());
                         studentService.saveOTP(otpModel);

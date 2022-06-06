@@ -12,7 +12,7 @@ import java.util.List;
 @Document
 public class UserInfo {
     @Id
-    private int id;
+    private long id;
     private String name;
     private String lastName;
     @Indexed(unique = true)
@@ -30,5 +30,9 @@ public class UserInfo {
         this.gender = gender;
         this.userAddress = userAddress;
         this.userSubjects = userSubjects;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
