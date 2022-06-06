@@ -23,6 +23,8 @@ public class UserInfo {
 
     private String updatedEmail;
 
+    private String profilePath;
+
     public UserInfo(String name, String lastName, String email, Gender gender, UserAddress userAddress, List<String> userSubjects) {
         this.name = name;
         this.lastName = lastName;
@@ -34,5 +36,13 @@ public class UserInfo {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void setProfilePath(String profilePath) {
+        this.profilePath = profilePath;
+    }
+
+    public String getProfilePath() {
+        return profilePath;
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.math.BigInteger;
 
 @Data
-@Document
+@Document()
 public class OTPModel {
     @Id
     private long id;

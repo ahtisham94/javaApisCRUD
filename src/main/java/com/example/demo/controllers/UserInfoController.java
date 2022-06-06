@@ -62,22 +62,21 @@ public class UserInfoController<T> {
     @RequestMapping(value = "api/v1/saveUser", method = RequestMethod.POST)
     public GeneralResponseModel<T> saveUser(@RequestBody UserInfo userInfo) {
         GeneralResponseModel responseModel = new GeneralResponseModel();
-        studentService.getRepository().findUserInfoByEmail(userInfo.getEmail()).
-                ifPresentOrElse(userInfo1 -> {
-                    responseModel.setCode(ApisCodes.RECORD_ALREADY_EXIST.apiCode.code + "");
-                    responseModel.setMessage(ApisCodes.RECORD_ALREADY_EXIST.apiCode.desc);
-                    responseModel.setSuccess(false);
-                    responseModel.setData(null);
+        studentService.getRepository().findUserInfoByEmail(userInfo.getEmail()).ifPresentOrElse(userInfo1 -> {
+            responseModel.setCode(ApisCodes.RECORD_ALREADY_EXIST.apiCode.code + "");
+            responseModel.setMessage(ApisCodes.RECORD_ALREADY_EXIST.apiCode.desc);
+            responseModel.setSuccess(false);
+            responseModel.setData(null);
 
-                }, () -> {
-                    userInfo.setId(studentService.getRepository().count() + 1);
-                    studentService.saveUser(userInfo);
-                    responseModel.setCode(ApisCodes.SUCCESS.apiCode.code + "");
-                    responseModel.setMessage(ApisCodes.SUCCESS.apiCode.desc);
-                    responseModel.setSuccess(true);
-                    responseModel.setData(userInfo);
+        }, () -> {
+            userInfo.setId(studentService.getRepository().count() + 1);
+            studentService.saveUser(userInfo);
+            responseModel.setCode(ApisCodes.SUCCESS.apiCode.code + "");
+            responseModel.setMessage(ApisCodes.SUCCESS.apiCode.desc);
+            responseModel.setSuccess(true);
+            responseModel.setData(userInfo);
 
-                });
+        });
         return responseModel;
 
     }
@@ -85,21 +84,20 @@ public class UserInfoController<T> {
     @RequestMapping(value = "api/v1/deleteUser", method = RequestMethod.DELETE)
     public GeneralResponseModel<T> deleteUser(@RequestBody UserInfo userInfo) {
         GeneralResponseModel responseModel = new GeneralResponseModel();
-        studentService.getRepository().findUserInfoByEmail(userInfo.getEmail()).
-                ifPresentOrElse(userInfo1 -> {
-                    studentService.getRepository().delete(userInfo1);
-                    responseModel.setCode(ApisCodes.SUCCESS.apiCode.code + "");
-                    responseModel.setMessage("User Deleted Successfully");
-                    responseModel.setSuccess(true);
-                    responseModel.setData(null);
+        studentService.getRepository().findUserInfoByEmail(userInfo.getEmail()).ifPresentOrElse(userInfo1 -> {
+            studentService.getRepository().delete(userInfo1);
+            responseModel.setCode(ApisCodes.SUCCESS.apiCode.code + "");
+            responseModel.setMessage("User Deleted Successfully");
+            responseModel.setSuccess(true);
+            responseModel.setData(null);
 
-                }, () -> {
-                    responseModel.setCode(ApisCodes.USER_NOT_FOUND.apiCode.code + "");
-                    responseModel.setMessage(ApisCodes.USER_NOT_FOUND.apiCode.desc);
-                    responseModel.setSuccess(false);
-                    responseModel.setData(null);
+        }, () -> {
+            responseModel.setCode(ApisCodes.USER_NOT_FOUND.apiCode.code + "");
+            responseModel.setMessage(ApisCodes.USER_NOT_FOUND.apiCode.desc);
+            responseModel.setSuccess(false);
+            responseModel.setData(null);
 
-                });
+        });
         return responseModel;
 
     }
@@ -107,26 +105,25 @@ public class UserInfoController<T> {
     @RequestMapping(value = "api/v1/updateUser", method = RequestMethod.POST)
     public GeneralResponseModel<T> updateUser(@RequestBody UserInfo userInfo) {
         GeneralResponseModel responseModel = new GeneralResponseModel();
-        studentService.getRepository().findUserInfoByEmail(userInfo.getEmail()).
-                ifPresentOrElse(userInfo1 -> {
-                    Query query = new Query().addCriteria(where("email").is(userInfo.getEmail()));
-                    Update update = new Update();
-                    update.set("email", userInfo.getUpdatedEmail());
-                    template.updateFirst(query, update, UserInfo.class);
-                    UserInfo updateUserInfo = userInfo1;
-                    updateUserInfo.setEmail(userInfo.getUpdatedEmail());
-                    responseModel.setCode(ApisCodes.SUCCESS.apiCode.code + "");
-                    responseModel.setMessage("User update Successfully");
-                    responseModel.setSuccess(true);
-                    responseModel.setData(updateUserInfo);
+        studentService.getRepository().findUserInfoByEmail(userInfo.getEmail()).ifPresentOrElse(userInfo1 -> {
+            Query query = new Query().addCriteria(where("email").is(userInfo.getEmail()));
+            Update update = new Update();
+            update.set("email", userInfo.getUpdatedEmail());
+            template.updateFirst(query, update, UserInfo.class);
+            UserInfo updateUserInfo = userInfo1;
+            updateUserInfo.setEmail(userInfo.getUpdatedEmail());
+            responseModel.setCode(ApisCodes.SUCCESS.apiCode.code + "");
+            responseModel.setMessage("User update Successfully");
+            responseModel.setSuccess(true);
+            responseModel.setData(updateUserInfo);
 
-                }, () -> {
-                    responseModel.setCode(ApisCodes.USER_NOT_FOUND.apiCode.code + "");
-                    responseModel.setMessage(ApisCodes.USER_NOT_FOUND.apiCode.desc);
-                    responseModel.setSuccess(false);
-                    responseModel.setData(null);
+        }, () -> {
+            responseModel.setCode(ApisCodes.USER_NOT_FOUND.apiCode.code + "");
+            responseModel.setMessage(ApisCodes.USER_NOT_FOUND.apiCode.desc);
+            responseModel.setSuccess(false);
+            responseModel.setData(null);
 
-                });
+        });
         return responseModel;
 
     }
@@ -141,20 +138,19 @@ public class UserInfoController<T> {
             responseModel.setMessage(response.getMessage());
             responseModel.setSuccess(response.isSuccess());
             responseModel.setCode(response.getCode());
-            studentService.getOtpRepository().findOtpModelByNumber(requestModel.getMsisdn())
-                    .ifPresentOrElse(otpModel -> {
-                        Query query = new Query().addCriteria(where("number").is(requestModel.getMsisdn()));
-                        Update update = new Update();
-                        otpModel.setOtp((int) ((((Double) response.getData())).doubleValue()));
-                        update.set("otp", otpModel.getOtp());
-                        template.updateFirst(query, update, OTPModel.class);
-                    }, () -> {
-                        OTPModel otpModel = new OTPModel();
-                        otpModel.setId(studentService.getOtpRepository().count() + 1);
-                        otpModel.setOtp((int) ((((Double) response.getData())).doubleValue()));
-                        otpModel.setNumber(requestModel.getMsisdn());
-                        studentService.saveOTP(otpModel);
-                    });
+            studentService.getOtpRepository().findOtpModelByNumber(requestModel.getMsisdn()).ifPresentOrElse(otpModel -> {
+                Query query = new Query().addCriteria(where("number").is(requestModel.getMsisdn()));
+                Update update = new Update();
+                otpModel.setOtp((int) ((((Double) response.getData())).doubleValue()));
+                update.set("otp", otpModel.getOtp());
+                template.updateFirst(query, update, OTPModel.class);
+            }, () -> {
+                OTPModel otpModel = new OTPModel();
+                otpModel.setId(studentService.getOtpRepository().count() + 1);
+                otpModel.setOtp((int) ((((Double) response.getData())).doubleValue()));
+                otpModel.setNumber(requestModel.getMsisdn());
+                studentService.saveOTP(otpModel);
+            });
 
 
         }, requestModel, 1);
@@ -163,16 +159,23 @@ public class UserInfoController<T> {
     }
 
     @RequestMapping(value = "api/v1/upload", method = RequestMethod.POST)
-    public ResponseEntity<GeneralResponseModel> uploadFile(@RequestParam("file") MultipartFile file, String name) {
+    public ResponseEntity<GeneralResponseModel> uploadFile(@RequestParam("file") MultipartFile file, String name, int id) {
         String message = "";
         GeneralResponseModel responseModel = new GeneralResponseModel();
         try {
-            storageService.save(file);
-            message = "Uploaded the file successfully: " + file.getOriginalFilename();
-            responseModel.setCode(ApisCodes.USER_NOT_FOUND.apiCode.code + "");
+            studentService.getRepository().findUserInfoById(id).ifPresentOrElse(userInfo -> {
+                storageService.save(file);
+                attachedFileWithUser(file.getOriginalFilename(), userInfo);
+                responseModel.setMessage("Uploaded the file successfully: " + file.getOriginalFilename());
+                responseModel.setCode(ApisCodes.SUCCESS.apiCode.code + "");
+                responseModel.setSuccess(true);
+            }, () -> {
+                responseModel.setCode(ApisCodes.USER_NOT_FOUND.apiCode.code + "");
+                responseModel.setMessage(ApisCodes.USER_NOT_FOUND.apiCode.desc + "");
+                responseModel.setSuccess(false);
+            });
+
             responseModel.setData(null);
-            responseModel.setMessage(message);
-            responseModel.setSuccess(true);
             return ResponseEntity.status(HttpStatus.OK).body(responseModel);
         } catch (Exception e) {
             message = "Could not upload the file: " + file.getOriginalFilename() + "!";
@@ -184,12 +187,20 @@ public class UserInfoController<T> {
         }
     }
 
+    private void attachedFileWithUser(String originalFilename, UserInfo userInfo) {
+        Query query = new Query().addCriteria(where("id").is(userInfo.getId()));
+        Update update = new Update();
+        String url = MvcUriComponentsBuilder.fromMethodName(UserInfoController.class, "getFile", originalFilename).build().toString();
+        userInfo.setProfilePath(url);
+        update.set("profilePath", userInfo.getProfilePath());
+        template.updateFirst(query, update, UserInfo.class);
+    }
+
     @RequestMapping(value = "api/v1/files", method = RequestMethod.GET)
     public ResponseEntity<List<FileInfo>> getListFiles() {
         List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
             String filename = path.getFileName().toString();
-            String url = MvcUriComponentsBuilder
-                    .fromMethodName(UserInfoController.class, "getFile", path.getFileName().toString()).build().toString();
+            String url = MvcUriComponentsBuilder.fromMethodName(UserInfoController.class, "getFile", path.getFileName().toString()).build().toString();
             return new FileInfo(filename, url);
         }).collect(Collectors.toList());
         return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
@@ -199,7 +210,6 @@ public class UserInfoController<T> {
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {
         Resource file = storageService.load(filename);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 }
