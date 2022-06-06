@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.RetrofitRest.APIManager;
+import com.example.demo.enumirations.ApisCodes;
 import com.example.demo.fileUtils.FileInfo;
 import com.example.demo.fileUtils.FilesStorageService;
 import com.example.demo.models.GeneralResponseModel;
@@ -45,13 +46,13 @@ public class UserInfoController<T> {
         GeneralResponseModel responseModel = new GeneralResponseModel();
         if (studentService.getAllUsers().size() > 0) {
 
-            responseModel.setCode(00);
-            responseModel.setMessage("Users Founds");
+            responseModel.setCode(ApisCodes.SUCCESS.apiCode.code + "");
+            responseModel.setMessage(ApisCodes.SUCCESS.apiCode.desc);
             responseModel.setSuccess(true);
             responseModel.setData(studentService.getAllUsers());
         } else {
-            responseModel.setCode(1514);
-            responseModel.setMessage("Users not found");
+            responseModel.setCode(ApisCodes.USER_NOT_FOUND.apiCode.code + "");
+            responseModel.setMessage(ApisCodes.USER_NOT_FOUND.apiCode.desc);
             responseModel.setSuccess(false);
             responseModel.setData(null);
         }
@@ -63,16 +64,16 @@ public class UserInfoController<T> {
         GeneralResponseModel responseModel = new GeneralResponseModel();
         studentService.getRepository().findUserInfoByEmail(userInfo.getEmail()).
                 ifPresentOrElse(userInfo1 -> {
-                    responseModel.setCode(1211);
-                    responseModel.setMessage("User Already Exists");
+                    responseModel.setCode(ApisCodes.RECORD_ALREADY_EXIST.apiCode.code + "");
+                    responseModel.setMessage(ApisCodes.RECORD_ALREADY_EXIST.apiCode.desc);
                     responseModel.setSuccess(false);
                     responseModel.setData(null);
 
                 }, () -> {
                     userInfo.setId(studentService.getRepository().count() + 1);
                     studentService.saveUser(userInfo);
-                    responseModel.setCode(00);
-                    responseModel.setMessage("User information Successfully");
+                    responseModel.setCode(ApisCodes.SUCCESS.apiCode.code + "");
+                    responseModel.setMessage(ApisCodes.SUCCESS.apiCode.desc);
                     responseModel.setSuccess(true);
                     responseModel.setData(userInfo);
 
@@ -87,14 +88,14 @@ public class UserInfoController<T> {
         studentService.getRepository().findUserInfoByEmail(userInfo.getEmail()).
                 ifPresentOrElse(userInfo1 -> {
                     studentService.getRepository().delete(userInfo1);
-                    responseModel.setCode(00);
+                    responseModel.setCode(ApisCodes.SUCCESS.apiCode.code + "");
                     responseModel.setMessage("User Deleted Successfully");
                     responseModel.setSuccess(true);
                     responseModel.setData(null);
 
                 }, () -> {
-                    responseModel.setCode(8524);
-                    responseModel.setMessage("User Not found");
+                    responseModel.setCode(ApisCodes.USER_NOT_FOUND.apiCode.code + "");
+                    responseModel.setMessage(ApisCodes.USER_NOT_FOUND.apiCode.desc);
                     responseModel.setSuccess(false);
                     responseModel.setData(null);
 
@@ -114,14 +115,14 @@ public class UserInfoController<T> {
                     template.updateFirst(query, update, UserInfo.class);
                     UserInfo updateUserInfo = userInfo1;
                     updateUserInfo.setEmail(userInfo.getUpdatedEmail());
-                    responseModel.setCode(00);
+                    responseModel.setCode(ApisCodes.SUCCESS.apiCode.code + "");
                     responseModel.setMessage("User update Successfully");
                     responseModel.setSuccess(true);
                     responseModel.setData(updateUserInfo);
 
                 }, () -> {
-                    responseModel.setCode(8524);
-                    responseModel.setMessage("User Not found");
+                    responseModel.setCode(ApisCodes.USER_NOT_FOUND.apiCode.code + "");
+                    responseModel.setMessage(ApisCodes.USER_NOT_FOUND.apiCode.desc);
                     responseModel.setSuccess(false);
                     responseModel.setData(null);
 
@@ -168,16 +169,16 @@ public class UserInfoController<T> {
         try {
             storageService.save(file);
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
-            responseModel.setCode(00);
+            responseModel.setCode(ApisCodes.USER_NOT_FOUND.apiCode.code + "");
             responseModel.setData(null);
             responseModel.setMessage(message);
             responseModel.setSuccess(true);
             return ResponseEntity.status(HttpStatus.OK).body(responseModel);
         } catch (Exception e) {
             message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-            responseModel.setCode(123131);
+            responseModel.setCode(ApisCodes.EXCEPTIONAL_ERROR.apiCode.code + "");
             responseModel.setData(null);
-            responseModel.setMessage(message);
+            responseModel.setMessage(ApisCodes.EXCEPTIONAL_ERROR.apiCode.desc + message);
             responseModel.setSuccess(true);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(responseModel);
         }

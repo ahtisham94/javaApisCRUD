@@ -2,16 +2,16 @@ package com.example.demo.models;
 
 public class GeneralResponseModel<T> {
 
-    private Integer code;
+    private String code;
     private String message;
     private boolean isSuccess;
     private T data;
 
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(String code) {
         this.code = code;
     }
 

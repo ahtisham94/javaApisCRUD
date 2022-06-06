@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.enumirations.ApisCodes;
 import com.example.demo.models.GeneralResponseModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,9 @@ public class FileUploadExceptionAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<GeneralResponseModel> handleMaxSizeException(MaxUploadSizeExceededException exc) {
         GeneralResponseModel responseModel = new GeneralResponseModel();
         responseModel.setSuccess(false);
-        responseModel.setMessage("File too large!");
+        responseModel.setMessage(ApisCodes.FILE_TOO_LARGE.apiCode.desc);
         responseModel.setData(null);
-        responseModel.setCode(134356);
+        responseModel.setCode(ApisCodes.FILE_TOO_LARGE.apiCode.code + "");
         return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(responseModel);
     }
 }

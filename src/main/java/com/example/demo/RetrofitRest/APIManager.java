@@ -1,5 +1,6 @@
 package com.example.demo.RetrofitRest;
 
+import com.example.demo.enumirations.ApisCodes;
 import com.example.demo.models.GeneralResponseModel;
 import com.example.demo.models.User.GenerateOTPRequestModel;
 import retrofit2.Call;
@@ -52,7 +53,7 @@ public class APIManager<T> {
                 GeneralResponseModel<T> genericResponseModel = new GeneralResponseModel<>();
                 genericResponseModel.setData(null);
                 genericResponseModel.setSuccess(false);
-                genericResponseModel.setCode(response.code());
+                genericResponseModel.setCode(response.code() + "");
                 genericResponseModel.setMessage(response.message());
                 result.onResult(genericResponseModel, rc);
             }
@@ -61,8 +62,8 @@ public class APIManager<T> {
             GeneralResponseModel<T> genericResponseModel = new GeneralResponseModel<>();
             genericResponseModel.setData(null);
             genericResponseModel.setSuccess(false);
-            genericResponseModel.setCode(12470);
-            genericResponseModel.setMessage(e.getLocalizedMessage());
+            genericResponseModel.setCode(ApisCodes.EXCEPTIONAL_ERROR.apiCode.code + "");
+            genericResponseModel.setMessage(ApisCodes.EXCEPTIONAL_ERROR.apiCode.desc + e.getLocalizedMessage());
             result.onResult(genericResponseModel, rc);
         }
     }
@@ -81,7 +82,7 @@ public class APIManager<T> {
                     GeneralResponseModel<T> genericResponseModel = new GeneralResponseModel<>();
                     genericResponseModel.setData(null);
                     genericResponseModel.setSuccess(false);
-                    genericResponseModel.setCode(response.code());
+                    genericResponseModel.setCode(response.code() + "");
                     genericResponseModel.setMessage(response.message());
                 }
             }
@@ -91,8 +92,8 @@ public class APIManager<T> {
                 GeneralResponseModel<T> genericResponseModel = new GeneralResponseModel<>();
                 genericResponseModel.setData(null);
                 genericResponseModel.setSuccess(false);
-                genericResponseModel.setCode(12470);
-                genericResponseModel.setMessage(throwable.getLocalizedMessage());
+                genericResponseModel.setCode(ApisCodes.EXCEPTIONAL_ERROR.apiCode.code + "");
+                genericResponseModel.setMessage(ApisCodes.EXCEPTIONAL_ERROR.apiCode.desc + throwable.getLocalizedMessage());
             }
         });
 
