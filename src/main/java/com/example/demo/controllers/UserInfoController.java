@@ -159,7 +159,8 @@ public class UserInfoController<T> {
     }
 
     @RequestMapping(value = "api/v1/upload", method = RequestMethod.POST)
-    public ResponseEntity<GeneralResponseModel> uploadFile(@RequestParam("file") MultipartFile file, String name, int id) {
+    public ResponseEntity<GeneralResponseModel> uploadFile(@RequestParam("file") MultipartFile file,
+                                                           String name, int id) {
         String message = "";
         GeneralResponseModel responseModel = new GeneralResponseModel();
         try {

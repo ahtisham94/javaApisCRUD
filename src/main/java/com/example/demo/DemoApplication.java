@@ -7,7 +7,9 @@ import com.example.demo.models.User.UserInfo;
 import com.example.demo.repos.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -17,7 +19,7 @@ import retrofit2.Retrofit;
 import javax.annotation.Resource;
 import java.util.List;
 
-@SpringBootApplication
+@SpringBootApplication()
 public class DemoApplication implements CommandLineRunner {
     @Resource
     FilesStorageService storageService;
@@ -25,6 +27,7 @@ public class DemoApplication implements CommandLineRunner {
         SpringApplication.run(DemoApplication.class, args);
         System.out.println("first Project");
     }
+
 
     @Bean
     CommandLineRunner runner(UserRepository repository, MongoTemplate mongoTemplate) {
@@ -62,4 +65,7 @@ public class DemoApplication implements CommandLineRunner {
         storageService.deleteAll();
         storageService.init();
     }
+
+
+
 }
